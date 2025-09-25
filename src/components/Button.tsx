@@ -1,15 +1,17 @@
 import { type ReactElement } from "react"
 
 type IButton = {
-  buttonText: string,
+  children: ReactElement[] | ReactElement | string,
   className?: string,
   onClick: () => void,
 }
 
-const Button = ({buttonText, className, onClick}:IButton):ReactElement => {
+const Button = ({children, className, onClick}:IButton):ReactElement => {
   return (
     <div onClick={onClick} className={`button p-2 cursor-pointer rounded-md shadow-md hover:shadow-lg ${className}`}>
-      {buttonText}
+      <>
+        {children}
+      </>
     </div>
   )
 }

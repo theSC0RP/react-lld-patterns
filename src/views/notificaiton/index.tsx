@@ -1,46 +1,55 @@
-import { useContext, useState } from "react";
-import { NotificationListContext } from "./context/NotificationListContext";
-import Button from "./components/Button";
-import Input from "./components/Input";
+import { useState } from "react";
+import { useNotificationList } from "../../context/NotificationListContext";
+import Button from "../../components/Button";
+import Input from "../../components/Input";
 import { nanoid } from "nanoid";
-import { type INotification, type INotificationPosition, type INotificationType } from "./types";
-import Textarea from "./components/Textarea";
+import {
+  type INotification,
+  type INotificationPosition,
+  type INotificationType,
+} from "../../types";
+import Textarea from "../../components/Textarea";
 
 const NotificationCreator = () => {
-  const initialState:INotification = {
+  const initialState: INotification = {
     id: "",
     message: "",
     description: "",
     type: "info",
     duration: 3000,
-    position: "top-right"
-  }
+    position: "top-right",
+  };
 
-  const [notification, setNotification] = useState<INotification>(initialState)
+  const [notification, setNotification] = useState<INotification>(initialState);
 
-  const NotificationListCtx = useContext(NotificationListContext);
+  const { addNotification } = useNotificationList();
 
   const onShowNotificationButtonClick = () => {
-    if (NotificationListCtx) {
-      if (!notification.message) {
-        NotificationListCtx.addNotification({id: nanoid(), message: "Please add a message", duration: 3000, position: "top-right", type: "danger"});
-        return
-      }
-
-      NotificationListCtx.addNotification({...notification, id: nanoid()});
-      setNotification(initialState);
+    if (!notification.message) {
+      addNotification({
+        id: nanoid(),
+        message: "Please add a message",
+        duration: 3000,
+        position: "top-right",
+        type: "danger",
+      });
+      return;
     }
-  }
+
+    addNotification({ ...notification, id: nanoid() });
+    setNotification(initialState);
+  };
 
   return (
-    <div>
-      <h2 className="text-4xl mb-8">Create Notification</h2>
+    <div className="flex flex-col justify-center align-middle items-center">
       <Input
         placeholder="Notification Message"
         name="notificaiton_message"
         value={notification.message}
         onChange={(e) => {
-          setNotification(prev => {return {...prev, "message": e.target.value}})
+          setNotification((prev) => {
+            return { ...prev, message: e.target.value };
+          });
         }}
         className="block w-[500px] h-[40px] mb-4 rounded-md"
       />
@@ -50,7 +59,9 @@ const NotificationCreator = () => {
         name="notificaiton_description"
         value={notification?.description || ""}
         onChange={(e) => {
-          setNotification(prev => {return {...prev, "description": e.target.value}})
+          setNotification((prev) => {
+            return { ...prev, description: e.target.value };
+          });
         }}
         className="block w-[500px] mb-4 rounded-md"
         rows={3}
@@ -62,16 +73,23 @@ const NotificationCreator = () => {
         value={notification.duration || 3000}
         type="number"
         onChange={(e) => {
-          setNotification(prev => {return {...prev, "duration": Number(e.target.value)}})
+          setNotification((prev) => {
+            return { ...prev, duration: Number(e.target.value) };
+          });
         }}
         className="block w-[500px] h-[40px] mb-4 rounded-md"
       />
 
       <select
         name="notificaiton_position"
-        value={notification.position || "top-right" as INotificationPosition}
+        value={notification.position || ("top-right" as INotificationPosition)}
         onChange={(e) => {
-          setNotification(prev => {return {...prev, "position": e.target.value as INotificationPosition}})
+          setNotification((prev) => {
+            return {
+              ...prev,
+              position: e.target.value as INotificationPosition,
+            };
+          });
         }}
         className="bg-white text-gray-800 border-1 p-2 block w-[500px] h-[40px] mb-4 rounded-md"
       >
@@ -85,7 +103,9 @@ const NotificationCreator = () => {
         name="notificaiton_type"
         value={notification.type}
         onChange={(e) => {
-          setNotification(prev => {return {...prev, "type": e.target.value as INotificationType}})
+          setNotification((prev) => {
+            return { ...prev, type: e.target.value as INotificationType };
+          });
         }}
         className="bg-white text-gray-800 border-1 p-2 block w-[500px] h-[40px] mb-4 rounded-md"
       >
@@ -96,10 +116,11 @@ const NotificationCreator = () => {
       </select>
 
       <Button
-        buttonText="Show Notification"
         className="h-[40px] mt-6 bg-blue-500 text-white"
         onClick={() => onShowNotificationButtonClick()}
-      />
+      >
+        Show Notification
+      </Button>
     </div>
   );
 };

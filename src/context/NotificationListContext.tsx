@@ -1,4 +1,4 @@
-import { createContext, type ReactElement, useState } from "react";
+import { createContext, type ReactElement, useContext, useState } from "react";
 import { type INotification } from "../types";
 
 
@@ -33,4 +33,14 @@ export const NotificationListContextProvider = ({ children } : INotificationList
   return <NotificationListContext.Provider value={{notificationList, addNotification, removeNotification}}>
     {children}
   </NotificationListContext.Provider>
+}
+
+export const useNotificationList = () => {
+  const context = useContext(NotificationListContext)
+
+  if (!context) {
+    throw new Error("useNotificationList should be used inside NotificationListContextProvider")
+  }
+
+  return context;
 }
