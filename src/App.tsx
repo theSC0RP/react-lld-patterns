@@ -9,6 +9,7 @@ import MainView from "./views";
 import Home from "./views/home";
 import ModalView from "./views/modal";
 import { ModalContextProvider } from "./context/ModalContext";
+import InfiniteScrollView from "./views/infiniteScroll";
 
 const sidebarItems: SidebarItem[] = [
   {
@@ -25,11 +26,16 @@ const sidebarItems: SidebarItem[] = [
     index: 2,
     name: "Modal",
     component: <ModalView />,
-  },
+  }, 
+  {
+    index: 3,
+    name: "Infinite Scroll View",
+    component: <InfiniteScrollView />
+  }
 ];
 
 function App() {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(1);
 
   return (
     <ModalContextProvider>
@@ -37,7 +43,7 @@ function App() {
         <div className="bg-neutral-900 p-4 border-y-1 border-y-neutral-950 text-3xl">
           React LLD Practice
         </div>
-        <div className="w-[100%] h-[100%] m-0 flex bg-neutral-900">
+        <div className="w-full h-[100%] m-0 flex bg-neutral-900">
           <Sidebar items={sidebarItems} setActiveIndex={setActiveIndex} />
           <>
             <MainView item={sidebarItems[activeIndex]}>

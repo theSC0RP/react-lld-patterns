@@ -10,7 +10,7 @@ export const Notification = ({notification}: INotificationProps) => {
   let notificationColor = "bg-amber-50"
   switch(notification?.type) {
     case "danger":
-      notificationColor = "bg-red-500";
+      notificationColor = "bg-red-800";
       break;
     case "warning":
       notificationColor = "bg-amber-500";
@@ -29,10 +29,10 @@ export const Notification = ({notification}: INotificationProps) => {
     >
     <div className="flex">
       <div className="w-[300px] text-left text-wrap">
-        <div className={"text-white font-semibold"}>
+        <div className={"text-white font-semibold pb-1.5 border-b-1 border-b-gray-400"}>
           {notification.message}
         </div>
-        <div className={"text-white"}>
+        <div className={"text-white pt-1"}>
           {notification?.description}
         </div>
       </div>
