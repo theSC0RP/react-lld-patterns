@@ -26,7 +26,7 @@ Key components include:
 ## Getting Started
 
 ```bash
-git clone https://github.com/<your-username>/react-lld-patterns.git
+git clone https://github.com/theSC0RP/react-lld-patterns.git
 cd react-lld-patterns
 npm install
 npm run dev
