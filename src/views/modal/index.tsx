@@ -7,7 +7,7 @@ const ModalView = () => {
 
   return (
     <div>
-      <Button onClick={showModal} className="w-50">
+      <Button onClick={showModal} className="w-50 bg-blue-500">
         Show Modal
       </Button>
       {modalVisible && <Modal 
@@ -20,7 +20,7 @@ const ModalView = () => {
         </div>}
       >
         <div className="p-4 flex-grow">
-          this is a modal
+          This is a modal
         </div>
       </Modal>}
     </div>
