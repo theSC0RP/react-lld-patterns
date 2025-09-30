@@ -10,6 +10,7 @@ import Home from "./views/home";
 import ModalView from "./views/modal";
 import { ModalContextProvider } from "./context/ModalContext";
 import InfiniteScrollView from "./views/infiniteScroll";
+import DragAndDropList from "./views/dragAndDropList";
 
 const sidebarItems: SidebarItem[] = [
   {
@@ -31,6 +32,11 @@ const sidebarItems: SidebarItem[] = [
     index: 3,
     name: "Infinite Scroll View",
     component: <InfiniteScrollView />
+  },  
+  {
+    index: 4,
+    name: "Drag And Drop List",
+    component: <DragAndDropList />
   }
 ];
 
