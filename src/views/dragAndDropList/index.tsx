@@ -1,5 +1,6 @@
 import { nanoid } from "nanoid";
-import React, { useState, type DragEvent } from "react";
+import React, { useRef, useState, type DragEvent } from "react";
+import Button from "../../components/Button";
 
 type Avenger = {
   id: string;
@@ -34,38 +35,47 @@ const originalAvengers: Avenger[] = [
 
 const DragAndDropList = () => {
   const [list, setList] = useState<Avenger[]>(originalAvengers);
-  const [isDragging, setIsDragging] = useState<boolean>(false)
-  const [dragged, setDragged] = useState<Avenger|null>(null)
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const dragged = useRef<Avenger | null>(null);
 
   const onListItemDrag = (e: DragEvent, listItem: Avenger) => {
     if (!isDragging) {
-      setList((prev) => prev.filter(l => l.id != listItem.id))
-      setIsDragging(true)
-      setDragged(listItem)
+      setList((prev) => prev.filter((l) => l.id != listItem.id));
+      setIsDragging(true);
+      dragged.current = listItem;
     }
   };
 
   const onListItemDrop = (e: DragEvent) => {
     console.log("On Drop: ", e);
-    setIsDragging(false); 
-    setDragged(null);
+    setIsDragging(false);
+    dragged.current = null;
   };
 
   const onListItemDragEnd = (e: DragEvent) => {
     console.log("On Drag End: ", e);
-    setIsDragging(false); 
-    setDragged(null);
+    setIsDragging(false);
+    dragged.current = null;
   };
 
   const onListItemDragOver = (e: DragEvent, listItem: Avenger) => {
     console.log("On Drag Over: ", e);
-  }
+  };
 
   return (
     <div>
-      <div className="text-left text-lg mb-4">
-        Rearrange the original Avengers in order of your favorites.
+      <div className="flex mb-4">
+        <div className="text-left text-lg">
+          Rearrange the original Avengers in order of your favorites.
+        </div>
+        <Button 
+          onClick={() => setList(originalAvengers)}
+          className="ml-8 px-8 py-1 bg-blue-500 rounded-md h-[32px]"
+        > 
+        Reset
+        </Button>
       </div>
+
       <div
         onDrop={onListItemDrop}
         className="p-20 bg-gray-950 w-fit"
