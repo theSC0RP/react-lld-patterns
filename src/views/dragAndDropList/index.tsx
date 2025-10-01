@@ -37,6 +37,7 @@ const DragAndDropList = () => {
   const [list, setList] = useState<Avenger[]>(originalAvengers);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const dragged = useRef<Avenger | null>(null);
+  const dropIndex = useRef<number | null>(null);
 
   const onListItemDrag = (e: DragEvent, listItem: Avenger) => {
     if (!isDragging) {
@@ -48,18 +49,42 @@ const DragAndDropList = () => {
 
   const onListItemDrop = (e: DragEvent) => {
     console.log("On Drop: ", e);
+    
+    setList(prev => {
+      const newList = [...prev]
+      newList.splice(dropIndex.current as number, 0, dragged.current as Avenger)
+      
+      return newList;
+    })
+
     setIsDragging(false);
-    dragged.current = null;
+    // dragged.current = null;
   };
 
-  const onListItemDragEnd = (e: DragEvent) => {
-    console.log("On Drag End: ", e);
-    setIsDragging(false);
-    dragged.current = null;
-  };
+  // const onListItemDragEnd = (e: DragEvent) => {
+  //   console.log("On Drag End: ", e);
+  //   setIsDragging(false);
+  //   dragged.current = null;
 
-  const onListItemDragOver = (e: DragEvent, listItem: Avenger) => {
-    console.log("On Drag Over: ", e);
+  // };
+
+  const onListItemDragOver = (e: DragEvent, index: number) => {
+    const target = e.target as HTMLElement;
+    const {top, height} = target.getBoundingClientRect();
+    const clientY = e.clientY;
+
+    let placeAbove = true
+
+    if (clientY > top + height / 2) {
+      placeAbove = false;
+      index += 1;
+    } 
+
+    console.log("Place at " + index)
+    
+
+    dropIndex.current = index;
+
   };
 
   return (
@@ -83,15 +108,15 @@ const DragAndDropList = () => {
           e.preventDefault();
         }}
       >
-        {list.map((listItem: Avenger) => {
+        {list.map((listItem: Avenger, i: number) => {
           return (
             <div
               key={listItem.id}
               draggable
               className="my-4 p-2 rounded-md bg-gray-700 w-md"
               onDrag={(e) => onListItemDrag(e, listItem)}
-              onDragEnd={onListItemDragEnd}
-              onDragOver={(e) => onListItemDragOver(e, listItem)}
+              // onDragEnd={onListItemDragEnd}
+              onDragOver={(e) => onListItemDragOver(e, i)}
             >
               {listItem.title}
             </div>
