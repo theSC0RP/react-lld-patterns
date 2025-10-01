@@ -11,6 +11,7 @@ import ModalView from "./views/modal";
 import { ModalContextProvider } from "./context/ModalContext";
 import InfiniteScrollView from "./views/infiniteScroll";
 import DragAndDropList from "./views/dragAndDropList";
+import DebouncedInputView from "./views/debouncedInputView";
 
 const sidebarItems: SidebarItem[] = [
   {
@@ -37,6 +38,10 @@ const sidebarItems: SidebarItem[] = [
     index: 4,
     name: "Drag And Drop List",
     component: <DragAndDropList />
+  }, {
+    index: 5,
+    name: "Debounced Input",
+    component: <DebouncedInputView />
   }
 ];
 
