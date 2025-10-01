@@ -41,7 +41,7 @@ const sidebarItems: SidebarItem[] = [
 ];
 
 function App() {
-  const [activeIndex, setActiveIndex] = useState(4);
+  const [activeIndex, setActiveIndex] = useState(1);
 
   return (
     <ModalContextProvider>
