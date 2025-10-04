@@ -4,7 +4,7 @@ import { type ChangeEvent } from 'react'
 type IInput<T extends string | number> = {
   value: T;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  name: string;
+  name?: string;
   placeholder?: string;
   className?: string;
   type?: string;

@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, type Dispatch, type ReactElement, type SetStateAction } from "react";
+import { createContext, useContext, useState, type ReactElement } from "react";
 
 
 type IModalContext = {
