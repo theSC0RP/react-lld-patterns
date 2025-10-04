@@ -14,7 +14,10 @@ type Book = {
   title: string;
 };
 
-const BookList = ({ books }: { books: Book[] }): ReactElement => {
+type IBookList = {
+  books: Book[]
+}
+const BookList = ({ books }: IBookList): ReactElement => {
   return (
     <div className="mt-4">
       <div className="text-left text-lg">Books</div>
@@ -30,6 +33,41 @@ const BookList = ({ books }: { books: Book[] }): ReactElement => {
   );
 };
 
+type IBookSearchContainer = {
+  title: string,
+  description: string,
+  inputValue: string,
+  inputValueOnChange: Dispatch<SetStateAction<string>>,
+  books: Book[],
+  apiCallCount: number
+}
+const BookSearchContainer = ({title, description, inputValue, inputValueOnChange, books, apiCallCount}:IBookSearchContainer):ReactElement => {
+  return <div className="w-[50%] p-4 border-1 border-neutral-600 rounded-xl">
+    <h2 className="text-center text-xl font-semibold mb-1">
+      {title}
+    </h2>
+    <p className="font-thin mb-6">({description})</p>
+    <div className="flex items-center">
+      <label className="mr-2 w-[150px] text-left text-lg">
+        Search Query:{" "}
+      </label>
+      <Input
+        value={inputValue}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+          inputValueOnChange(e.target.value);
+        }}
+        className="rounded-lg p-2 h-[32px] w-full"
+        placeholder="Enter the book you want to search"
+      />
+    </div>
+    <BookList books={books} />
+
+    <p className="mt-4 text-left">
+      API called {apiCallCount} times
+    </p>
+  </div>
+}
+
 const DebouncedInputView = () => {
   const [instantQuery, setInstantQuery] = useState<string>("");
   const [instantApiCallCount, setInstantApiCallCount] = useState<number>(0);
@@ -41,6 +79,8 @@ const DebouncedInputView = () => {
   const [debouncedBookResults, setDebouncedBookResults] = useState<Book[]>([]);
 
   const limit = 10;
+  const debounceDelay = 500;
+  
 
   const fetchBooks = async (
     searchQuery: string,
@@ -56,7 +96,7 @@ const DebouncedInputView = () => {
     stateUpdateFunction(
       books.map((book: any) => {
         return {
-          id: book.cover_i,
+          id: book.key || book.cover_i || book.title,
           authors: book.author_name,
           title: book.title,
         };
@@ -75,7 +115,7 @@ const DebouncedInputView = () => {
 
   useEffect(() => {
     if (debouncedQueryInput) {
-      const timeoutId = setTimeout(() => setDebouncedQuery(debouncedQueryInput), 500)
+      const timeoutId = setTimeout(() => setDebouncedQuery(debouncedQueryInput), debounceDelay)
 
       return () => {clearTimeout(timeoutId)}
     } else {
@@ -93,53 +133,23 @@ const DebouncedInputView = () => {
 
   return (
     <div className="flex w-full gap-2">
-      <div className="w-[50%] p-4 border-1 border-neutral-600 rounded-xl">
-        <div className="text-center text-xl font-semibold mb-6">
-          Normal Input
-        </div>
-        <div className="flex items-center">
-          <label className="mr-2 w-[150px] text-left text-lg">
-            Search Query:{" "}
-          </label>
-          <Input
-            value={instantQuery}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => {
-              setInstantQuery(e.target.value);
-            }}
-            className="rounded-lg p-2 h-[32px] w-full"
-            placeholder="Enter the book you want to search"
-          />
-        </div>
-        <BookList books={instantBookResults} />
+      <BookSearchContainer 
+        title="Normal Input"
+        description="API called on every keystroke"
+        inputValue={instantQuery}
+        inputValueOnChange={setInstantQuery}
+        books={instantBookResults}
+        apiCallCount={instantApiCallCount}
+      />
 
-        <div className="mt-4 text-left">
-          API called {instantApiCallCount} times
-        </div>
-      </div>
-
-      <div className="w-[50%] p-4 border-1 border-neutral-600 rounded-xl">
-        <div className="text-center text-xl font-semibold mb-6">
-          Debounced Input
-        </div>
-        <div className="flex items-center">
-          <label className="mr-2 w-[150px] text-left text-lg">
-            Search Query:{" "}
-          </label>
-          <Input
-            value={debouncedQueryInput}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => {
-              setDebouncedQueryInput(e.target.value);
-            }}
-            className="rounded-lg p-2 h-[32px] w-full"
-            placeholder="Enter the book you want to search"
-          />
-        </div>
-        <BookList books={debouncedBookResults} />
-
-        <div className="mt-4 text-left">
-          API called {debouncedApiCallCount} times
-        </div>
-      </div>
+      <BookSearchContainer 
+        title="Debounced Input"
+        description={`API called after user stops typing for ${debounceDelay}ms`}
+        inputValue={debouncedQueryInput}
+        inputValueOnChange={setDebouncedQueryInput}
+        books={debouncedBookResults}
+        apiCallCount={debouncedApiCallCount}
+      />
     </div>
   );
 };

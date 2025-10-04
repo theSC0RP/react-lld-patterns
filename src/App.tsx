@@ -40,7 +40,7 @@ const sidebarItems: SidebarItem[] = [
     component: <DragAndDropList />
   }, {
     index: 5,
-    name: "Debounced Input",
+    name: "Debouncing",
     component: <DebouncedInputView />
   }
 ];
